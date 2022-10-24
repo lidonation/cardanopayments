@@ -14,9 +14,11 @@ composer require lidonation/cardanopayments
 
 ## Usage
 
-```php
-$skeleton = new Lidonation\CardanoPayments();
-echo $skeleton->echoPhrase('Hello, Lidonation!');
+### Checkout Flow (web)
+You can access the test web page via composer:
+
+```bash
+composer web
 ```
 
 ## Testing
