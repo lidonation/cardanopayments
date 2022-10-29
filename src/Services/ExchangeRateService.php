@@ -50,7 +50,7 @@ class ExchangeRateService
     }
 
     //verify currency rate exchange support
-    protected function verifyCurrencySupport($currencies)
+    public function verifyCurrencySupport($currencies)
     {
         foreach ($currencies as $currency) {
             if ( ! array_key_exists($currency, $this->supportedCurrencies)) {
@@ -139,8 +139,13 @@ class ExchangeRateService
             $response = $client->request('GET', $path);
             if ($response->getStatusCode() == 200) {
                 $responseBody = json_decode($response->getBody(), true);
-                $rate = (float) $responseBody["data"]["rates"][$quote];
-                return $rate > 0 ? $rate : null;
+                if (array_key_exists($quote, $responseBody["data"]["rates"])) {
+                    $rate = (float) $responseBody["data"]["rates"][$quote] ?? null;
+                    return $rate > 0 ? $rate : null;
+                } else {
+                    return null;
+                }
+                
             } else {
                 return null;
             }
@@ -166,8 +171,13 @@ class ExchangeRateService
             $response = $client->request('GET', $path);
             if ($response->getStatusCode() == 200) {
                 $responseBody = json_decode($response->getBody(), true);
-                $rate = (float) $responseBody[$quote];
-                return $rate > 0 ? $rate : null;
+                if (array_key_exists($quote, $responseBody)) {
+                    $rate = (float) $responseBody[$quote];
+                    return $rate > 0 ? $rate : null;
+                } else {
+                    return null;
+                }
+                
             } else {
                 return null;
             }
