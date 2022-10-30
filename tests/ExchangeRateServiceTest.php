@@ -13,9 +13,8 @@ it('can get exchange rates', function () {
     $pairs = [['ADA', 'USD'], ['ADA', 'HOSKY'], ['ADA', 'EUR']];
 
     foreach ($pairs as $pair) {
-       $excObj = $service->getExchangeRate($pair[0], $pair[1]);
+        $excObj = $service->getExchangeRate($pair[0], $pair[1]);
     //    $this->assertIsFloat($rate);
         expect($excObj->rate)->toBeNumeric();
     }
-
 });
