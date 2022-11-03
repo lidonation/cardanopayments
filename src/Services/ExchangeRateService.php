@@ -61,14 +61,16 @@ class ExchangeRateService
     }
 
     // sets object's currency symbols based on the query.
-    protected function setCurrencySymbols($base, $quote)
+    protected function setCurrencySymbols($base, $quote): self
     {
         $this->baseCurrencySymbol = $this->supportedCurrencies[$this->baseCurrencyName];
         $this->quoteCurrencySymbol = $this->supportedCurrencies[$this->quoteCurrencyName];
+
+        return $this;
     }
 
     // gets the exchange rate from multiple apis then assigns the public property 'rate' of this class
-    protected function getHttpRate($b, $q)
+    protected function getHttpRate($b, $q): self
     {
         $rateApiProviders = ['coinapi', 'coinbase', 'cryptocompare', 'coinmarketcap'];
 
@@ -82,6 +84,8 @@ class ExchangeRateService
 
         $avgRate = $this->calAvg($validRates);
         $this->rate = $avgRate;
+
+        return $this;
     }
 
     //calculates average rate from an array.
