@@ -4,6 +4,7 @@ namespace Lidonation\CardanoPayments\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
+use Dotenv\Dotenv;
 
 class ExchangeRateService
 {
@@ -29,6 +30,10 @@ class ExchangeRateService
         if (! is_null($base) && ! is_null($quote)) {
             $this->getExchangeRate($base, $quote);
         }
+
+        // load enviroment variables
+        $dotenv = Dotenv::createImmutable(dirname(dirname(dirname(__FILE__))));
+        $dotenv->load();
     }
 
     public function getExchangeRate($base, $quote)
@@ -112,7 +117,7 @@ class ExchangeRateService
             $client = new Client([
                 'base_uri' => 'https://rest.coinapi.io',
             ]);
-            $api_key = '87EAC0C1-8115-4377-90C2-D18CFD9BC0E4';
+            $api_key = $_ENV['API_KEY_COINAPI'];
             $path = "/v1/exchangerate/" . $base . "/" . $quote;
             $headers = [
                 'X-CoinAPI-Key' => $api_key,
