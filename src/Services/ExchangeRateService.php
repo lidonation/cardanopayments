@@ -2,9 +2,9 @@
 
 namespace Lidonation\CardanoPayments\Services;
 
+use Dotenv\Dotenv;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
-use Dotenv\Dotenv;
 
 class ExchangeRateService
 {
@@ -77,11 +77,9 @@ class ExchangeRateService
     // gets the exchange rate from multiple apis then assigns the public property 'rate' of this class
     protected function getHttpRate($b, $q): self
     {
-        $rateApiProviders = ['coinapi', 'coinbase', 'cryptocompare', 'coinmarketcap'];
-
+        $ratesArray = $this->fetchHttpRates($b, $q);
         $validRates = [];
-        foreach ($rateApiProviders as $provider) {
-            $rate = $this->{$provider}($b, $q) ?? $this->rateFromInverse($provider, $b, $q);
+        foreach ($ratesArray as $rate) {
             if ($rate > 0 && is_float($rate)) {
                 array_push($validRates, $rate);
             }
@@ -91,6 +89,20 @@ class ExchangeRateService
         $this->rate = $avgRate;
 
         return $this;
+    }
+
+    // call multiple apis and return results in array
+    public function fetchHttpRates($b, $q): array
+    {
+        $rateApiProviders = ['coinapi', 'coinbase', 'cryptocompare', 'coinmarketcap'];
+        $ratesArray = [];
+
+        foreach ($rateApiProviders as $provider) {
+            $rate = $this->{$provider}($b, $q) ?? $this->rateFromInverse($provider, $b, $q);
+            array_push($ratesArray, $rate);
+        }
+
+        return $ratesArray;
     }
 
     //calculates average rate from an array.

@@ -2,19 +2,18 @@
 
 use Lidonation\CardanoPayments\Services\ExchangeRateService;
 
-it('can verify currency support', function () {
+it('can verify currency exchange', function () {
     $service = new ExchangeRateService();
-    $supported = $service->verifyCurrencySupport(['ADA', 'USD', 'EUR', 'HOSKY']);
-    $this->assertTrue($supported);
+    expect($service->verifyCurrencySupport(['ADA', 'USD', 'EUR', 'HOSKY']))->toBeTrue();
+    expect($service->verifyCurrencySupport(['ADA', 'TZ', 'KSH', 'HOSKY']))->toBeFalse();
 });
 
 it('can get exchange rates', function () {
-    $service = new ExchangeRateService();
-    $pairs = [['ADA', 'USD'], ['ADA', 'HOSKY'], ['ADA', 'EUR']];
+    $mock = mock(ExchangeRateService::class)->makePartial();
+    $mock->shouldReceive('fetchHttpRates')
+        ->andReturn([0.42, 0.46, 0.44, null])
+        ->getMock();
 
-    foreach ($pairs as $pair) {
-        $excObj = $service->getExchangeRate($pair[0], $pair[1]);
-    //    $this->assertIsFloat($rate);
-        expect($excObj->rate)->toBeNumeric();
-    }
+    expect($mock->getExchangeRate('ADA', 'USD')->rate)->toEqual(0.44);
+    expect(50 * ($mock->getExchangeRate('ADA', 'HOSKY')->rate))->toEqual(22);
 });
