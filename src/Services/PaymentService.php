@@ -2,6 +2,7 @@
 
 namespace Lidonation\CardanoPayments\Services;
 
+use Dotenv\Dotenv;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 // use Symfony\Component\Process\Process;
@@ -23,8 +24,12 @@ class PaymentService
 
     public function __construct()
     {
+        // load enviroment variables
+        $dotenv = Dotenv::createImmutable(dirname(dirname(dirname(__FILE__))));
+        $dotenv->load();
+
         $this->client = new Client([
-            'base_uri' => 'http://127.0.0.1:1024',
+            'base_uri' => $_ENV['CARDANO_WALLET_URI'],
             'verify' => false
         ]);
     }
