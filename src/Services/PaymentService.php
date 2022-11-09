@@ -5,6 +5,7 @@ namespace Lidonation\CardanoPayments\Services;
 use Dotenv\Dotenv;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
+
 // use Symfony\Component\Process\Process;
 
 class PaymentService
@@ -30,7 +31,7 @@ class PaymentService
 
         $this->client = new Client([
             'base_uri' => $_ENV['CARDANO_WALLET_URI'],
-            'verify' => false
+            'verify' => false,
         ]);
     }
 
@@ -43,7 +44,7 @@ class PaymentService
         return $this;
     }
 
-    public function processPayment(string $baseCurrency, string $paymentCurrency, $baseAmount, $paymentMount=null)
+    public function processPayment(string $baseCurrency, string $paymentCurrency, $baseAmount, $paymentMount = null)
     {
         $this->transaction["baseCurrency"] = $baseCurrency;
         $this->transaction["paymentCurrency"] = $paymentCurrency;
@@ -58,17 +59,19 @@ class PaymentService
         }
 
         // converting our $paymentMount to ADA then to lovelace
-        $this->transaction["paymentMountADA"] =  $this->convertToAda($this->transaction["paymentCurrency"], $this->transaction["paymentMount"]);
+        $this->transaction["paymentMountADA"] = $this->convertToAda($this->transaction["paymentCurrency"], $this->transaction["paymentMount"]);
         $lovelaceMount = $this->convertToLovelace($this->transaction["paymentMountADA"]);
 
         // excecute the transaction and return transaction id
         $this->transaction["id"] = $this->executeTransaction($lovelaceMount);
+
         return $this->transaction["id"];
     }
 
     public function convertToAda(string $currency, $amount)
     {
         $rate = $this->getAdaRate($currency);
+
         return $rate * $amount;
     }
 
@@ -80,69 +83,68 @@ class PaymentService
     public function getAdaRate(string $currency)
     {
         $exchObj = ($currency != "ADA") ? new ExchangeRateService($currency, "ADA") : 1.0;
-        return  $exchObj->rate ??  $exchObj;
+
+        return  $exchObj->rate ?? $exchObj;
     }
 
     public function executeTransaction($lovelaceAmount)
     {
         $constructString = $this->transactionConstruct($lovelaceAmount);
         $signString = $this->transactionSign($constructString);
-        if (!is_null($signString)) {
+        if (! is_null($signString)) {
             $submitString = $this->transactionSubmit($signString);
         }
-        
+
 
         return $submitString;
-
     }
 
     //returns transaction hash for the signing process's payload
     public function transactionConstruct($lovelaceAmount)
     {
         try {
-
             $payload = [
                 "payments" => [
                       [
-                         "address" => $this->receiverAddress, 
+                         "address" => $this->receiverAddress,
                          "amount" => [
-                            "quantity" => $lovelaceAmount, 
-                            "unit" => "lovelace" 
-                         ] 
-                      ] 
+                            "quantity" => $lovelaceAmount,
+                            "unit" => "lovelace",
+                         ],
+                      ],
                 ],
-                "withdrawal" => "self"
+                "withdrawal" => "self",
 
              ];
 
             $path = "/v2/wallets/{$this->walletId}/transactions-construct";
-            $response = $this->client->request("POST", $path, ['json'=>$payload]);
+            $response = $this->client->request("POST", $path, ['json' => $payload]);
             if ($response->getStatusCode() == 200 || $response->getStatusCode() == 202) {
                 $responseBody = json_decode($response->getBody(), true);
+
                 return $responseBody['transaction'];
             } else {
                 return null;
             }
-
         } catch (BadResponseException $e) {
             return true;
         }
-
     }
 
     // returns transaction hash for submit process's payload
     public function transactionSign(string $transaction)
-    {   
+    {
         try {
             $payload = [
                 'passphrase' => $this->passPhrase,
-                'transaction' => $transaction
+                'transaction' => $transaction,
             ];
-    
+
             $path = "/v2/wallets/{$this->walletId}/transactions-sign";
-            $response =  $this->client->request("POST", $path, ['json'=>$payload]);
+            $response = $this->client->request("POST", $path, ['json' => $payload]);
             if ($response->getStatusCode() == 200 || $response->getStatusCode() == 202) {
                 $responseBody = json_decode($response->getBody(), true);
+
                 return $responseBody['transaction'];
             } else {
                 return null;
@@ -150,21 +152,21 @@ class PaymentService
         } catch (BadResponseException $e) {
             return null;
         }
-
     }
 
-    // returns transaction id 
+    // returns transaction id
     public function transactionSubmit(string $transaction)
     {
         try {
             $payload = [
-                'transaction' => $transaction
+                'transaction' => $transaction,
             ];
-    
+
             $path = "/v2/wallets/{$this->walletId}/transactions-submit";
-            $response =  $this->client->request("POST", $path, ['json'=>$payload]);
+            $response = $this->client->request("POST", $path, ['json' => $payload]);
             if ($response->getStatusCode() == 200 || $response->getStatusCode() == 202) {
                 $responseBody = json_decode($response->getBody(), true);
+
                 return $responseBody['id'];
             } else {
                 return null;
