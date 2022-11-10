@@ -2,8 +2,6 @@
 
 namespace Lidonation\CardanoPayments\Services;
 
-use Lidonation\CardanoPayments\Services\ExchangeRateService;
-
 class PaymentService
 {
     public string $baseCurrency;
@@ -14,13 +12,12 @@ class PaymentService
 
     public function __construct()
     {
-
     }
 
     // process payment and return the payment amount in either of $allowedpaymentCurrencies
-    public function processPayment(string $baseCurrency, string $paymentCurrency, $baseAmount, $paymentMount=null): float
+    public function processPayment(string $baseCurrency, string $paymentCurrency, $baseAmount, $paymentMount = null): float
     {
-        if ( in_array($paymentCurrency, $this->allowedPaymentCurrencies) ) {
+        if (in_array($paymentCurrency, $this->allowedPaymentCurrencies)) {
             $this->baseCurrency = $baseCurrency;
             $this->baseAmount = $baseAmount;
             $this->paymentCurrency = $paymentCurrency;
@@ -32,23 +29,21 @@ class PaymentService
                 if ($paymentCurrency == "HOSKY") {
                     $exRate = $this->getExchangeRate($baseCurrency, $paymentCurrency);
                     $this->paymentMount = $exRate * $baseAmount;
-                } elseif ( $paymentCurrency == "lovelace" ) {
-                    $exRate = ( $baseCurrency != "ADA") ? $this->getExchangeRate($baseCurrency, "ADA") : 1.0;
+                } elseif ($paymentCurrency == "lovelace") {
+                    $exRate = ($baseCurrency != "ADA") ? $this->getExchangeRate($baseCurrency, "ADA") : 1.0;
                     $this->paymentMount = $exRate * $baseAmount * 1000000;
-                }    
+                }
             }
-
         }
 
         return $this->paymentMount;
     }
 
-    
     // use exchange rate service to get the rate of currency pair
     public function getExchangeRate(string $baseCurrency, string $quoteCurrency)
     {
         $rateObj = new ExchangeRateService($baseCurrency, $quoteCurrency);
+
         return  $rateObj->rate;
     }
-
 }
