@@ -17,6 +17,7 @@
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.5",
+        "illuminate/collections": "^9.39",
         "vlucas/phpdotenv": "^5.5"
     },
     "require-dev": {
@@ -33,13 +34,20 @@
     "autoload-dev": {
         "psr-4": {
             "Lidonation\\CardanoPayments\\Tests\\": "tests"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "scripts": {
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
-        "web":["php -S localhost:8080 src/public/index.php"]
+        "web":["php -S localhost:8080 src/public/index.php"],
+        "example":[
+            "Composer\\Config::disableProcessTimeout",
+            "php -S localhost:8080 -t src/public/example"
+        ]
     },
     "config": {
         "sort-packages": true,

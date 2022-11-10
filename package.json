@@ -1,0 +1,12 @@
+{
+  "name": "cardanopayments",
+  "version": "1.0.0",
+  "description": "Php library for processing cardano native payments",
+  "main": "app.js",
+  "repository": "git@github.com:lidonation/cardanopayments.git",
+  "author": "Lido Nation",
+  "license": "MIT",
+  "dependencies": {
+    "alpinejs": "^3.10.5"
+  }
+}
