@@ -11,7 +11,7 @@ $products = new Collection([
         'name' => 'Fun headphone',
         'baseCurrency' => null,
         'paymentCurrencies' => ['lovelace'],
-        'hero' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80'
+        'hero' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80',
     ],
 
     [
@@ -20,7 +20,7 @@ $products = new Collection([
         'name' => 'Fun headphone',
         'baseCurrency' => 'lovelace',
         'paymentCurrencies' => ['lovelace'],
-        'hero' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80'
+        'hero' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80',
     ],
     [
         'id' => 14,
@@ -40,7 +40,7 @@ $products = new Collection([
     ],
     [
         'id' => 14,
-        'price' =>19,
+        'price' => 19,
         'name' => 'One more thing',
         'currency' => 'usd',
         'paymentCurrencies' => ['hosky'],
@@ -48,10 +48,10 @@ $products = new Collection([
     ],
     [
         'id' => 14,
-        'price' =>19,
+        'price' => 19,
         'name' => 'One more thing',
         'currency' => 'hosky',
         'paymentCurrencies' => ['hosky'],
         'hero' => null,
-    ]
+    ],
 ]);

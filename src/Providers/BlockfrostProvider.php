@@ -1,6 +1,7 @@
 <?php
+
 namespace Lidonation\CardanoPayments\Providers;
 
-class BlockfrostProvider {
-
+class BlockfrostProvider
+{
 }

@@ -2,6 +2,6 @@
 
 namespace Lidonation\CardanoPayments\Services;
 
-class CardanoService {
-
+class CardanoService
+{
 }

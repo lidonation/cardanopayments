@@ -8,9 +8,11 @@ function loadEnvVariables()
     $dotenv->load();
 }
 
-function env($variable) {
-    if (!isset($_ENV[$variable])) {
+function env($variable)
+{
+    if (! isset($_ENV[$variable])) {
         loadEnvVariables();
     }
+
     return $_ENV[$variable] ?? null;
 }
