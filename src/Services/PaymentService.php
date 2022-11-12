@@ -14,15 +14,14 @@ class PaymentService
     {
     }
 
-    
     /**
      * Process payment amount to one of the supported payment currencies in $allowePaymentCurrencies array property
      *
      * @param string $baseCurrency
-     * @param string $quoteCurrency 
+     * @param string $quoteCurrency
      * @param int||float $baseAmount
      * @param null||int||float $paymentAmount
-     * 
+     *
      * @return int||float $this->paymentAmount
      */
     public function processPayment(string $baseCurrency, string $paymentCurrency, $baseAmount, $paymentAmount = null): float
@@ -35,11 +34,13 @@ class PaymentService
             // making sure we have $paymentCurrency and $paymentAmount set
             if (strcasecmp($baseCurrency, $paymentCurrency) == 0) {
                 $this->paymentAmount = $paymentAmount ?? $baseAmount;
+
                 return $this->paymentAmount;
             } else {
-                    $exRate = $this->getExchangeRate($baseCurrency, $paymentCurrency);
-                    $this->paymentAmount = $exRate * $baseAmount;
-                    return $this->paymentAmount;
+                $exRate = $this->getExchangeRate($baseCurrency, $paymentCurrency);
+                $this->paymentAmount = $exRate * $baseAmount;
+
+                return $this->paymentAmount;
             }
         }
     }
@@ -49,7 +50,7 @@ class PaymentService
      *
      * @param string $baseCurrency
      * @param string $quoteCurrency
-     * 
+     *
      * @return float
      */
     public function getExchangeRate(string $baseCurrency, string $quoteCurrency)

@@ -22,14 +22,14 @@ $productId = $_GET["product"];
 // $Get base price and base currency from db
 $product = $products->firstWhere('id', $productId);
 $basePrice = $product['price'];
-$baseCurrency= $product["baseCurrency"];
+$baseCurrency = $product["baseCurrency"];
 
 // $payments amounts and currencies (in ada || native tokens)
 $pyService = new PaymentService();
 $exchangableCurrencies = ['ADA', 'USD', 'EUR'];
 $paymentAmounts = [];
 
-if ( in_array($baseCurrency, $exchangableCurrencies)) {
+if (in_array($baseCurrency, $exchangableCurrencies)) {
     foreach ($product["paymentCurrencies"] as $paymentCurrency) {
         if ($baseCurrency == $paymentCurrency && $baseCurrency == "ADA") {
             $payment['currency'] = $baseCurrency;
@@ -65,7 +65,7 @@ include_once('../../resources/views/checkout.php');
 // Alert browser
 ?>
 <div>
-   <? $paymentAmounts ?>
+   <?php $paymentAmounts ?>
 </div>
 
 </body>

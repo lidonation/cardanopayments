@@ -11,7 +11,7 @@
                     foreach($paymentAmounts as $payment):
                         include('../../resources/views/price.php');
                     endforeach
-                ?>
+            ?>
             </div>
             <div class="pt-4">
                 <p>(ii) Please connect your wallet to complete checkout.</p>
