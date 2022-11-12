@@ -19,39 +19,44 @@ use Lidonation\CardanoPayments\Services\PaymentService;
 // get product id from query parameters
 $productId = $_GET["product"];
 
-// $basePrice = Get the base price from db
-foreach ($products as $product) {
-    if ($product['id'] == $productId) {
-        $basePrice = $product['price'];
-        $baseCurrency = $product['baseCurrency'] ?? "USD";
+// $Get base price and base currency from db
+$product = $products->firstWhere('id', $productId);
+$basePrice = $product['price'];
+$baseCurrency= $product["baseCurrency"];
 
-        // @todo this should be a loop
+// $payments amounts and currencies (in ada || native tokens)
+$pyService = new PaymentService();
+$exchangableCurrencies = ['ADA', 'USD', 'EUR'];
+$paymentAmounts = [];
 
-        $paymentCurrency = $product['paymentCurrencies'] ?? "lovelace";
-
-        // @todo loop should generation a collection of 1 ore more $paymentAmounts
-        $paymentAmounts = [
-            $currency ?? '0' => null,
-            $currency ?? 1 => null,
-        ];
+if ( in_array($baseCurrency, $exchangableCurrencies)) {
+    foreach ($product["paymentCurrencies"] as $paymentCurrency) {
+        if ($baseCurrency == $paymentCurrency && $baseCurrency == "ADA") {
+            $payment['currency'] = $baseCurrency;
+            $payment['amount'] = $basePrice;
+            array_push($paymentAmounts, $payment);
+        } else {
+            $payment['currency'] = $paymentCurrency;
+            $payment['amount'] = $paymentAmount = $pyService->processPayment($baseCurrency, $paymentCurrency, $basePrice);
+            array_push($paymentAmounts, $payment);
+        }
     }
+} else {
+    $payment['currency'] = $baseCurrency;
+    $payment['amount'] = $basePrice;
+    array_push($paymentAmounts, $payment);
 }
+
+// send price and asset [ada || hosky || any other native token] to browser
 
 // checkout ui
 ?><main class="mx-auto max-w-7xl py-16"><?php
-    $product = $products->firstWhere('id', $productId);
 include_once('../../resources/views/checkout.php');
 ?></main><?php
 
 
-// $paymentPrice[InLovelaces|hosky] = covert if needed to
 
 
-$pyService = new PaymentService();
-$paymentPrice = $pyService->processPayment($baseCurrency, $paymentCurrency, $basePrice);
-
-
-// send price and asset [ada || hosky] to browser
 
 // build transaction in browser
 // present transation to user for signature
@@ -59,6 +64,9 @@ $paymentPrice = $pyService->processPayment($baseCurrency, $paymentCurrency, $bas
 // confirms transaction
 // Alert browser
 ?>
+<div>
+   <? $paymentAmounts ?>
+</div>
 
 </body>
 </html>
