@@ -129,7 +129,7 @@ class ExchangeRateService
             $client = new Client([
                 'base_uri' => 'https://rest.coinapi.io',
             ]);
-            $api_key = $_ENV['API_KEY_COINAPI'];
+            $api_key = env('API_KEY_COINAPI');
             $path = "/v1/exchangerate/" . $base . "/" . $quote;
             $headers = [
                 'X-CoinAPI-Key' => $api_key,
