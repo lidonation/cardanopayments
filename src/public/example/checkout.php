@@ -4,11 +4,7 @@ use Lidonation\CardanoPayments\Services\PaymentService;
 ?><!DOCTYPE html>
 <html class="h-full">
     <head>
-        <script src="https://cdn.tailwindcss.com"></script>
-
-        <script src="js/app.js"></script>
-
-        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>        
     </head>
     <body class="h-full">
         <?php
@@ -47,14 +43,11 @@ if (in_array($baseCurrency, $exchangableCurrencies)) {
     array_push($paymentAmounts, $payment);
 }
 
-// send price and asset [ada || hosky || any other native token] to browser
 
 // checkout ui
 ?><main class="mx-auto max-w-7xl py-16"><?php
 include_once('../../resources/views/checkout.php');
 ?></main><?php
-
-
 
 
 
@@ -65,10 +58,11 @@ include_once('../../resources/views/checkout.php');
 // Alert browser
 ?>
 <div>
-   <?php $paymentAmounts ?>
+    <?php $paymentAmounts ?>
 </div>
 
+<script type="module" crossorigin src="/dapp/dist/assets/index.js" defer></script>
+<!-- <script type="module" crossorigin src="js/app.js" defer></script> -->
 </body>
 </html>
-
 
